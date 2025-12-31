@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>New Year 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Font for consistency -->
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  background:#0b1d3a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  color:white;
+  text-align:center;
+}
+
+.page{display:none;}
+.page.active{display:block;}
+
+.tap{
+  font-size:24px;
+  animation:blink 1.5s infinite;
+  cursor:pointer;
+}
+
+@keyframes blink{
+  0%,100%{opacity:1;}
+  50%{opacity:0.4;}
+}
+
+/* 🐼 PANDA – stays on all pages */
+.panda{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:80px;
+  animation:walk 1s infinite alternate;
+  pointer-events:none;
+}
+
+@keyframes walk{
+  from{transform:translateX(-50%) translateX(-8px);}
+  to{transform:translateX(-50%) translateX(8px);}
+}
+
+/* ❤️ Love text */
+#loveText{
+  font-size:36px;
+  font-weight:bold;
+  margin-top:20px;
+  font-family:'Georgia', 'Helvetica Neue', Arial, sans-serif;
+  color:#ffb6ff;
+  animation:shine 2.5s infinite;
+}
+
+@keyframes shine{
+  0%{text-shadow:0 0 5px #ff69b4;}
+  50%{text-shadow:0 0 15px #ffb6ff;}
+  100%{text-shadow:0 0 5px #ff69b4;}
+}
+
+input{
+  padding:10px;
+  font-size:18px;
+  width:120px;
+  text-align:center;
+  border:none;
+  border-radius:8px;
+}
+
+button{
+  margin-top:10px;
+  padding:8px 16px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.result{
+  margin-top:15px;
+  font-size:18px;
+}
+
+/* ❤️ Falling hearts */
+.heart{
+  position:fixed;
+  top:-20px;
+  font-size:20px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<!-- 🐼 PANDA (GLOBAL) -->
+<div class="panda">🐼</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1" onclick="nextPage(1)">
+  <div class="tap">Tap to Begin ✨</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2" onclick="nextPage(2)">
+  <h2>Happy New Year 🎉</h2>
+  <p>
+    New year, new memories…<br>
+    but same me, still teasing you 😄<br><br>
+    Let’s keep laughing, caring,<br>
+    fixing silly fights,<br>
+    and growing together 💫
+  </p>
+
+  <p style="margin-top:15px;font-style:italic;opacity:0.9;">
+    I truly hope our bond never breaks in any situation,<br>
+    and that we always try to understand each other,<br>
+    even on the days when it feels hard.
+  </p>
+
+  <div class="tap">Tap again 💕</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p3">
+  <h3>Just one small question for you 💭</h3>
+  <p>12² − 1 = ?</p>
+
+  <input type="number" id="ans" placeholder="Answer">
+  <br>
+  <button onclick="check()">Click</button>
+
+  <div class="result" id="res"></div>
+</div>
+
+<script>
+const music = document.getElementById("music");
+
+function nextPage(n){
+  document.getElementById("p"+n).classList.remove("active");
+  document.getElementById("p"+(n+1)).classList.add("active");
+
+  if(n===1){
+    music.play().catch(()=>{});
+  }
+}
+
+function check(){
+  const val = document.getElementById("ans").value;
+  const res = document.getElementById("res");
+
+  if(val == 143){
+      // First, normal smaller message on top
+      res.innerHTML = '<div style="font-size:20px; margin-bottom:10px;">Correct Madam jii 😊</div>';
+      
+      // Then, the big love text below
+      const love = document.createElement("div");
+      love.id = "loveText";
+      love.textContent = "I love you so much, Devanshiii 💖";
+      res.appendChild(love);
+
+      // Trigger hearts
+      dropHearts();
+  }else{
+      res.innerHTML = "Try again 😄";
+  }
+
+}
+
+/* ❤️ HEART FALL EFFECT */
+function dropHearts(){
+  const hearts = ["❤️","💗","💖","💕"];
+  const duration = 10000; // duration in ms
+  const start = Date.now();
+
+  function spawn(){
+    if(Date.now() - start > duration) return; // stop after duration
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText=hearts[Math.floor(Math.random()*hearts.length)];
+    // Full width random position
+    h.style.left = Math.random() * 100 + "vw";
+    // Random animation duration 3-5s
+    h.style.animationDuration=(7+Math.random()*5)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+
+    requestAnimationFrame(spawn);
+  }
+  spawn();
+}
+</script>
+
+</body>
+</html>
